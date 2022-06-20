@@ -237,22 +237,23 @@ class SquishSquare(Tool):
                     return
 
             # Create a pass for picking a world-space location from the mouse location
-            active_camera = self._controller.getScene().getActiveCamera()
-            picking_pass = PickingPass(active_camera.getViewportWidth(), active_camera.getViewportHeight())
-            picking_pass.render()
+            # active_camera = self._controller.getScene().getActiveCamera()
+            # picking_pass = PickingPass(active_camera.getViewportWidth(), active_camera.getViewportHeight())
+            # picking_pass.render()
 
-            picked_position = picking_pass.getPickedPosition(event.x, event.y)
+            # picked_position = picking_pass.getPickedPosition(event.x, event.y)
 
-            Logger.log('d', "X : {}".format(picked_position.x))
-            Logger.log('d', "Y : {}".format(picked_position.y))
+            # Logger.log('d', "X : {}".format(picked_position.x))
+            # Logger.log('d', "Y : {}".format(picked_position.y))
                             
             # Add the support_mesh cube at the picked location
             self._nbtab += 1
-            self._createSquishMesh(picked_node, picked_position,self._nbtab)
+            #self._createSquishMesh(picked_node, picked_position,self._nbtab)
+            self._createSquishMesh(picked_node, self._nbtab)
             if self._nbtab >= 2 :
                 self._nbtab = 0
 
-    def _createSquishMesh(self, parent: CuraSceneNode, position_spe: Vector, Nb: int):
+    def _createSquishMesh(self, parent: CuraSceneNode, Nb: int):
         node = CuraSceneNode()
 
         node.setName("SquishSquare_" + str(Nb))
@@ -278,7 +279,7 @@ class SquishSquare(Tool):
         position = Vector(PosX, 0, PosY)
 
         # long=Support Height
-        _long=position_spe.y
+        #_long=position_spe.y
         
         # This function can be triggered in the middle of a machine change, so do not proceed if the machine change
         # has not done yet.
@@ -460,9 +461,9 @@ class SquishSquare(Tool):
                         Logger.log('d', "Mesh : {}".format(node.getName()))
 
                         nb_Tab+=1
-                        new_position = Vector(0, 0, 0)
-                        self._createSquishMesh(node, new_position ,nb_Tab)
-                        self._createSquishMesh(node, new_position ,nb_Tab)
+                        self._createSquishMesh(node ,nb_Tab)
+                        nb_Tab+=1
+                        self._createSquishMesh(node ,nb_Tab)
                             
                              
         return nb_Tab
