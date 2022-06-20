@@ -276,8 +276,7 @@ class SquishSquare(Tool):
         
 
         # Square creation Size , layer_height_0*1.2
-        position.z = 0
-        mesh = self._createSquare(self._UseSize,_layer_h)
+        mesh = self._createSquare(self._UseSize,_long,_layer_h)
         
         node.setMeshData(mesh.build())
 
@@ -353,24 +352,26 @@ class SquishSquare(Tool):
  
  
     # Cube Creation
-    def _createSquare(self, size, height):
+    def _createSquare(self, size, lg, height):
         mesh = MeshBuilder()
 
         # Intial Comment from Ultimaker B.V. I have never try to verify this point
         # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         s = size / 2
-        l = height 
+        l = -lg
+        sup = -lg+height
+    
         
 
         nbv=24        
         verts = [ # 6 faces with 4 corners each
-            [-s, -l,  s], [-s,  s,  s], [ s,  s,  s], [ s, -l,  s],
-            [-s,  s, -s], [-s, -l, -s], [ s, -l, -s], [ s,  s, -s],
-            [ s, -l, -s], [-s, -l, -s], [-s, -l,  s], [ s, -l,  s],
-            [-s,  s, -s], [ s,  s, -s], [ s,  s,  s], [-s,  s,  s],
-            [-s, -l,  s], [-s, -l, -s], [-s,  s, -s], [-s,  s,  s],
-            [ s, -l, -s], [ s, -l,  s], [ s,  s,  s], [ s,  s, -s]
+            [-s, l,  s], [-s,  sup,  s], [ s,  sup,  s], [ s, l,  s],
+            [-s,  sup, -s], [-s, l, -s], [ s, l, -s], [ s,  sup, -s],
+            [ s, l, -s], [-s, l, -s], [-s, l,  s], [ s, l,  s],
+            [-s,  sup, -s], [ s,  sup, -s], [ s,  sup,  s], [-s,  sup,  s],
+            [-s, l,  s], [-s, l, -s], [-s,  sup, -s], [-s,  sup,  s],
+            [ s, l, -s], [ s, l,  s], [ s,  sup,  s], [ s,  sup, -s]
         ]
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
