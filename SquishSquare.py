@@ -80,6 +80,7 @@ class SquishSquare(Tool):
         self._AdhesionArea = False
         self._Nb_Layer = 1
         self._SMsg = 'Remove All'
+        self._nbtab = 0
 
         # Shortcut
         if not VERSION_QT5:
@@ -250,12 +251,15 @@ class SquishSquare(Tool):
             Logger.log('d', "Y : {}".format(picked_position.y))
                             
             # Add the support_mesh cube at the picked location
-            self._createSquishMesh(picked_node, picked_position)
+            self._nbtab += 1
+            self._createSquishMesh(picked_node, picked_position,self._nbtab)
+            if self._nbtab >= 2 :
+                self._nbtab = 0
 
-    def _createSquishMesh(self, parent: CuraSceneNode, position_spe: Vector):
+    def _createSquishMesh(self, parent: CuraSceneNode, position_spe: Vector, Nb: int):
         node = CuraSceneNode()
 
-        node.setName("SquishSquare")
+        node.setName("SquishSquare_" + str(Nb))
             
         node.setSelectable(True)
  
@@ -270,14 +274,13 @@ class SquishSquare(Tool):
         
 
         PosX = node_bounds.center.x - node_bounds.width*0.5 - self._UseSize
-        PosY = node_bounds.center.z - node_bounds.depth*0.5 - self._UseSize
+        PosY = node_bounds.center.z + node_bounds.depth*0.5 + self._UseSize
 
-        # Logger.log("d", "Pos X= %s", str(PosX))
-        # Logger.log("d", "Pos Y= %s", str(PosY))
+        Logger.log("d", "Pos X= %s", str(PosX))
+        Logger.log("d", "Pos Y= %s", str(PosY))
         
         position = Vector(PosX, 0, PosY)
 
-        
         # long=Support Height
         _long=position_spe.y
         
@@ -295,7 +298,7 @@ class SquishSquare(Tool):
         
 
         # Square creation Size , layer_height_0*1.2
-        mesh = self._createSquare(self._UseSize,_long,_layer_h)
+        mesh = self._createSquare(self._UseSize,_layer_h)
         
         node.setMeshData(mesh.build())
 
@@ -308,12 +311,26 @@ class SquishSquare(Tool):
 
         Logger.log('d', 'getSettingDefinition squish_mesh')
         
-        # support_mesh type
+        # squish_mesh type
         definition = stack.getSettingDefinition("squish_mesh")
         new_instance = SettingInstance(definition, settings)
         new_instance.setProperty("value", True)
         new_instance.resetState()  # Ensure that the state is not seen as a user state.
         settings.addInstance(new_instance)
+        
+        if Nb==1 :
+                definition = stack.getSettingDefinition("top_bottom_pattern")
+                new_instance = SettingInstance(definition, settings)
+                new_instance.setProperty("value", "concentric")
+                new_instance.resetState()  # Ensure that the state is not seen as a user state.
+                settings.addInstance(new_instance)
+        
+        if Nb==2 :
+                definition = stack.getSettingDefinition("top_bottom_pattern")
+                new_instance = SettingInstance(definition, settings)
+                new_instance.setProperty("value", "lines")
+                new_instance.resetState()  # Ensure that the state is not seen as a user state.
+                settings.addInstance(new_instance)       
         
         op = GroupedOperation()
         # First add node to the scene at the correct position/scale, before parenting, so the support mesh does not get scaled with the parent
@@ -328,7 +345,7 @@ class SquishSquare(Tool):
         Logger.log('d', 'propertyChanged emit')
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
-        Logger.log('d', 'End of _createSquishMesh')
+        # Logger.log('d', 'End of _createSquishMesh')
 
     def _removeSquishMesh(self, node: CuraSceneNode):
         parent = node.getParent()
@@ -371,15 +388,15 @@ class SquishSquare(Tool):
  
  
     # Cube Creation
-    def _createSquare(self, size, lg, height):
+    def _createSquare(self, size, height):
         mesh = MeshBuilder()
 
         # Intial Comment from Ultimaker B.V. I have never try to verify this point
         # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         s = size / 2
-        l = -lg
-        sup = -lg+height
+        l = 0
+        sup = height
     
         
 
@@ -428,8 +445,6 @@ class SquishSquare(Tool):
             
     def addAutoSquishMesh(self) -> int:
         nb_Tab=0
-        act_position = Vector(99999.99,99999.99,99999.99)
-        first_pt=Vector
         
         for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
             if node.callDecoration("isSliceable"):
@@ -443,57 +458,15 @@ class SquishSquare(Tool):
                     type_identification_mesh = node_stack.getProperty("identification_mesh", "value")
                     type_squish_mesh = node_stack.getProperty("squish_mesh", "value")
                     
+                    nb_Tab=0
                     if not type_infill_mesh and not type_support_mesh and not type_anti_overhang_mesh and not type_cutting_mesh and not type_identification_mesh and not type_squish_mesh :
                         # and Selection.isSelected(node)
                         Logger.log('d', "Mesh : {}".format(node.getName()))
-                        
-                        #hull_polygon = node.callDecoration("getConvexHull")
-                        if self._AdhesionArea :
-                            hull_polygon = node.callDecoration("getAdhesionArea")
-                        else:
-                            # hull_polygon = node.callDecoration("getConvexHull")
-                            # hull_polygon = node.callDecoration("getConvexHullBoundary")
-                            hull_polygon = node.callDecoration("_compute2DConvexHull")
-                            
-        
-                        if not hull_polygon or hull_polygon.getPoints is None:
-                            Logger.log("w", "Object {} cannot be calculated because it has no convex hull.".format(node.getName()))
-                            continue
-                            
 
-                        points=hull_polygon.getPoints()
-                        # nb_pt = point[0] / point[1] must be divided by 2
-                        nb_pt=points.size*0.5
-                        Logger.log('d', "Size pt : {}".format(nb_pt))
-                        
-                        for point in points:
-                            nb_Tab+=1
-                            # Logger.log('d', "Nb_Tab : {}".format(nb_Tab))
-                            if nb_Tab == 1:
-                                first_pt = Vector(point[0], 0, point[1])
-                                # Logger.log('d', "First X : {}".format(point[0]))
-                                # Logger.log('d', "First Y : {}".format(point[1]))
-                                
-                            # Logger.log('d', "X : {}".format(point[0]))
-                            # Logger.log('d', "Y : {}".format(point[1]))
-                            new_position = Vector(point[0], 0, point[1])
-                            lg=act_position-new_position
-                            lght = lg.length()
-                            # Logger.log('d', "Length : {}".format(lght))
-                            # Add a tab if the distance between 2 tabs are more than a Tab Radius
-                            # We have to tune this parameter or algorythm in the futur
-                            if nb_Tab == nb_pt:
-                                lgfl=(first_pt-new_position).length()
-                                 
-                                # Logger.log('d', "Length First Last : {}".format(lgfl))
-                                if lght >= (self._UseSize*0.5) and lgfl >= (self._UseSize*0.5) :
-                                    self._createSquishMesh(node, new_position)
-                                    act_position = new_position                               
-                            else:
-                                if lght >= (self._UseSize*0.5) :
-                                    self._createSquishMesh(node, new_position)
-                                    act_position = new_position
-                                 
+                        nb_Tab+=1
+                        new_position = Vector(0, 0, 0)
+                        self._createSquishMesh(node, new_position ,nb_Tab)
+                        self._createSquishMesh(node, new_position ,nb_Tab)
                             
                              
         return nb_Tab
