@@ -1,8 +1,9 @@
 # Squish Square
-Add two elements as square Tab to test the leveling of your bed effect in print corner. 
+Add element as Square Tab to test the leveling of your bed effect in print corner. 
 
 ![Square Tabs](./images/SquishSquare.png)
 
+These Square Tab can be used to judge and adjust first layer squish especialy for difficult material like ABS.
 
 The automatic functions of adding and deleting tabs make it easy to create each elements.
 
@@ -41,8 +42,7 @@ on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/SquishSqu
 
 ![Automatic Addition](./images/addition.png)
 
-
-Add automaticaly two tabs on the point in the lower corner of the model
+Add automaticaly **two tabs** in the lower corner of the model.
 
 The first one is defined with the option Top/Bottom pattern to **concentric**.
 
