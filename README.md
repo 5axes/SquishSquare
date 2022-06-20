@@ -1,17 +1,12 @@
-# Tab Anti Warping +
-Add element as rounded Tab to limit warping effect in print corner. This plugin is an improved version of my first plugin : [TabAntiWarping](https://github.com/5axes/TabAntiWarping).
+# Suish Square
+Add two elements as square Tab to test the leveling of your bed effect in print corner. 
 
+![Suqre Tabs](./images/pastille_anti_wrapping.JPG)
 
-![Pastille](./images/pastille_anti_wrapping.JPG)
-
-Using Helper Disks, which act on the corners of your model to help keep everything pinned down. Once the print is finished, the disks can be cut away pretty easily.
-
-
-**Note : Actual solution is limited by the possibility to use just a global : Support X/Y Distance**
 
 The automatic functions of adding and deleting tabs make it easy to create each elements.
 
-![Automatix Function](./images/buttons.png)
+![Automatic Function](./images/buttons.png)
 
 ## Installation
 First, make sure your Cura version is  4.4 or newer.
@@ -28,11 +23,11 @@ on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/TabAntiWa
 ## How to use
 
 - Load a model in Cura and select it
-- Click on the "Tab Anti Warping" button on the left toolbar  (Shortcut J)
+- Click on the "Squish Square" button on the left toolbar  (Shortcut S)
 - Change de value for the tab *Size* in numeric input field in the tool panel if necessary
 
 
-- Click anywhere on the model to place "Tab Anti Warping" there
+- Click anywhere on the model to place "Squish Square" there
 
 - **Clicking existing Tab deletes it**
 
@@ -44,30 +39,6 @@ on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/TabAntiWa
 
 >Note: it's easier to add/remove tabs when you are in "Solid View" mode
 
-## Define as Capsule
-
-Option "Define as Capsule" to create a Capsule style tab. 
-
-![Menu](./images/menu.png)
-
-This new design has been integrated following the request of [Reality4DEvolution](https://github.com/Reality4DEvolution) in this post : [Discussion #9](https://github.com/5axes/TabAntiWarping/discussions/9) 
-
-
-![Capsule design](./images/capsule.png)
-
-The new design should offer a bevel on the outsite of the tab to be much more easy to remove, as you can get the scraper under it, and start to remove the project much easier.
-
-![Scrapper](./images/test-capsule.jpg)
-
-## Number of layers
-
-Option "Number of layers" to create tabs with several layers height. 
-
-![Menu](./images/menu.jpg)
-
-**If the number of layers is bigger than 1, then the **Support Density** is automaticaly set to 100%.**
-
-![Message 100%](./images/message100pc.jpg)
 
 ## Automatic Addition
 
@@ -79,10 +50,7 @@ The option "Set On Adhesion Area" offer to adds the tabs on the Adhesion Area bo
 
 ## Remove All / Last
 
-Button to remove the lasts tab created ( **!but also every element defined as support type** )
+Button to remove the lasts tab created ( **!but also every element defined as Squish type** )
 
 ![Remove All](./images/remove_all.png)
 
-#### YouTube video
-
-[![Capsule Style](http://img.youtube.com/vi/H0WI-OIgcFE/0.jpg)](http://www.youtube.com/watch?v=H0WI-OIgcFE)
