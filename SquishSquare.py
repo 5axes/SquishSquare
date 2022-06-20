@@ -253,7 +253,7 @@ class SquishSquare(Tool):
     def _createSquishMesh(self, parent: CuraSceneNode, position: Vector):
         node = CuraSceneNode()
 
-        node.setName("RoundTab")
+        node.setName("SquishSquare")
             
         node.setSelectable(True)
         
@@ -269,17 +269,17 @@ class SquishSquare(Tool):
         #extruder = global_container_stack.extruderList[int(_id_ex)] 
         extruder_stack = CuraApplication.getInstance().getExtruderManager().getActiveExtruderStacks()[0]     
         self._Extruder_count=global_container_stack.getProperty("machine_extruder_count", "value") 
-        #Logger.log('d', "Info Extruder_count --> " + str(self._Extruder_count))   
+        Logger.log('d', "Info Extruder_count --> " + str(self._Extruder_count))   
         
         _layer_h_i = extruder_stack.getProperty("layer_height_0", "value")
         _layer_height = extruder_stack.getProperty("layer_height", "value")
         _line_w = extruder_stack.getProperty("line_width", "value")
-        # Logger.log('d', 'layer_height_0 : ' + str(_layer_h_i))
+        Logger.log('d', 'layer_height_0 : ' + str(_layer_h_i))
         _layer_h = (_layer_h_i * 1.2) + (_layer_height * (self._Nb_Layer -1) )
         _line_w = _line_w * 1.2 
         
 
-        # Cylinder creation Diameter , Increment angle 10°, length, layer_height_0*1.2
+        # Square creation Size , layer_height_0*1.2
         mesh = self._createSquare(self._UseSize,_layer_h)
         
         node.setMeshData(mesh.build())
@@ -381,7 +381,7 @@ class SquishSquare(Tool):
         mesh.calculateNormals()
         return mesh
         
-    def removeAllSupportMesh(self):
+    def removeAllSquishMesh(self):
         if self._all_picked_node:
             for node in self._all_picked_node:
                 node_stack = node.callDecoration("getStack")
