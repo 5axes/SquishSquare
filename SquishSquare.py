@@ -268,16 +268,12 @@ class SquishSquare(Tool):
         # Logger.log("d", "Center X= %s", str(node_bounds.center.x))
         # Logger.log("d", "Center Y= %s", str(node_bounds.center.z))
         # Logger.log("d", "Center Z= %s", str(node_bounds.center.y))
-        PosX = node_bounds.center.x - node_bounds.width*(1/3) - self._UseSize
-        PosY = node_bounds.center.z + node_bounds.depth*(1/3) + self._UseSize
+        PosX = node_bounds.center.x - (node_bounds.width + self._UseSize)*0.5
+        PosY = node_bounds.center.z + (node_bounds.depth + self._UseSize)*0.5
 
         # Logger.log("d", "Pos X= %s", str(PosX))
-        # Logger.log("d", "Pos Y= %s", str(PosY))
-        
+        # Logger.log("d", "Pos Y= %s", str(PosY))  
         position = Vector(PosX, 0, PosY)
-
-        # long=Support Height
-        #_long=position_spe.y
         
         # This function can be triggered in the middle of a machine change, so do not proceed if the machine change
         # has not done yet.
