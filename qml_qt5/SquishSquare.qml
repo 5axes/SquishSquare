@@ -4,7 +4,6 @@
 // 
 // properties values
 //   "SSize"    : Tab Size in mm
-//   "SArea" 	: Set on Adhesion Area
 //   "NLayer"   : Number of layer
 //   "SMsg"     : Text for the Remove All Button
 //
@@ -141,14 +140,4 @@ Item
 	}
 	
 
-	CheckBox
-	{
-		id: useAreaCheckbox
-		anchors.top: bottomRect.bottom
-		anchors.topMargin: UM.Theme.getSize("default_margin").height
-		text: catalog.i18nc("@option:check","Set On Adhesion Area")
-		style: UM.Theme.styles.partially_checkbox
-		checked: UM.ActiveTool.properties.getValue("SArea")
-		onClicked: UM.ActiveTool.setProperty("SArea", checked)
-	}
 }

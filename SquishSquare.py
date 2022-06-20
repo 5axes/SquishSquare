@@ -77,7 +77,6 @@ class SquishSquare(Tool):
         
         # variable for menu dialog        
         self._UseSize = 0.0
-        self._AdhesionArea = False
         self._Nb_Layer = 1
         self._SMsg = 'Remove All'
         self._nbtab = 0
@@ -118,7 +117,7 @@ class SquishSquare(Tool):
             except:
                 pass
         
-        self.setExposedProperties("SSize", "NLayer", "SMsg" ,"SArea" )
+        self.setExposedProperties("SSize", "NLayer", "SMsg" )
         
         CuraApplication.getInstance().globalContainerStackChanged.connect(self._updateEnabled)
         
@@ -140,10 +139,7 @@ class SquishSquare(Tool):
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("squishsquare/s_size", 10)
         # convert as float to avoid further issue
-        self._UseSize = float(self._preferences.getValue("squishsquare/s_size"))
-
-        self._preferences.addPreference("squishsquare/adhesion_area", False)
-        self._AdhesionArea = bool(self._preferences.getValue("squishsquare/adhesion_area"))   
+        self._UseSize = float(self._preferences.getValue("squishsquare/s_size"))  
 
         self._preferences.addPreference("squishsquare/nb_layer", 1)
         # convert as int to avoid further issue
@@ -530,17 +526,5 @@ class SquishSquare(Tool):
         self._Nb_Layer = i_value
         self._preferences.setValue("squishsquare/nb_layer", i_value)
                 
-    def getSArea(self) -> bool:
-        """ 
-            return: golabl _SArea  as boolean
-        """           
-        return self._AdhesionArea
-  
-    def setSArea(self, SArea: bool) -> None:
-        """
-        param SArea: as boolean.
-        """
-        self._AdhesionArea = SArea
-        self._preferences.setValue("squishsquare/adhesion_area", SArea)
  
 

@@ -3,9 +3,8 @@
 // 
 // properties values
 //   "SSize"    : Tab Size in mm
-//   "SArea" 	: Set on Adhesion Area
 //   "NLayer"   : Number of layer
-//   "SMsg"        : Text for the Remove All Button
+//   "SMsg"     : Text for the Remove All Button
 //
 //-----------------------------------------------------------------------------
 
@@ -143,13 +142,5 @@ Item
 		onClicked: UM.ActiveTool.triggerAction("addAutoSquishMesh")
 	}
 
-	UM.CheckBox
-	{
-		id: useAreaCheckbox
-		anchors.top: bottomRect.bottom
-		text: catalog.i18nc("@option:check","Set On Adhesion Area")
-		checked: UM.ActiveTool.properties.getValue("SArea")
-		onClicked: UM.ActiveTool.setProperty("SArea", checked)
-	}
 
 }
