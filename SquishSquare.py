@@ -262,19 +262,17 @@ class SquishSquare(Tool):
  
         node_bounds = parent.getBoundingBox()
         
-        Logger.log("d", "width= %s", str(node_bounds.width))
-        Logger.log("d", "height= %s", str(node_bounds.height))
-        Logger.log("d", "depth= %s", str(node_bounds.depth))
-        Logger.log("d", "Center X= %s", str(node_bounds.center.x))
-        Logger.log("d", "Center Y= %s", str(node_bounds.center.z))
-        Logger.log("d", "Center Z= %s", str(node_bounds.center.y))
-        
+        # Logger.log("d", "width= %s", str(node_bounds.width))
+        # Logger.log("d", "height= %s", str(node_bounds.height))
+        # Logger.log("d", "depth= %s", str(node_bounds.depth))
+        # Logger.log("d", "Center X= %s", str(node_bounds.center.x))
+        # Logger.log("d", "Center Y= %s", str(node_bounds.center.z))
+        # Logger.log("d", "Center Z= %s", str(node_bounds.center.y))
+        PosX = node_bounds.center.x - node_bounds.width*(1/3) - self._UseSize
+        PosY = node_bounds.center.z + node_bounds.depth*(1/3) + self._UseSize
 
-        PosX = node_bounds.center.x - node_bounds.width*0.5 - self._UseSize
-        PosY = node_bounds.center.z + node_bounds.depth*0.5 + self._UseSize
-
-        Logger.log("d", "Pos X= %s", str(PosX))
-        Logger.log("d", "Pos Y= %s", str(PosY))
+        # Logger.log("d", "Pos X= %s", str(PosX))
+        # Logger.log("d", "Pos Y= %s", str(PosY))
         
         position = Vector(PosX, 0, PosY)
 
@@ -285,14 +283,12 @@ class SquishSquare(Tool):
         # has not done yet.
         global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()
         extruder_stack = CuraApplication.getInstance().getExtruderManager().getActiveExtruderStacks()[0]     
-        self._Extruder_count=global_container_stack.getProperty("machine_extruder_count", "value") 
-        Logger.log('d', "Info Extruder_count --> " + str(self._Extruder_count))   
+        # self._Extruder_count=global_container_stack.getProperty("machine_extruder_count", "value") 
+        # Logger.log('d', "Info Extruder_count --> " + str(self._Extruder_count))   
         
         _layer_h_i = extruder_stack.getProperty("layer_height_0", "value")
         _layer_height = extruder_stack.getProperty("layer_height", "value")
-        # Logger.log('d', 'layer_height_0 : ' + str(_layer_h_i))
-        _layer_h = (_layer_h_i * 1.2) + (_layer_height * (self._Nb_Layer -1) )
-        
+        _layer_h = (_layer_h_i * 1.2) + (_layer_height * (self._Nb_Layer - 1))    
 
         # Square creation Size , layer_height_0*1.2
         mesh = self._createSquare(self._UseSize,_layer_h)
@@ -305,8 +301,6 @@ class SquishSquare(Tool):
 
         stack = node.callDecoration("getStack") # created by SettingOverrideDecorator that is automatically added to CuraSceneNode
         settings = stack.getTop()
-
-        Logger.log('d', 'getSettingDefinition squish_mesh')
         
         # squish_mesh type
         definition = stack.getSettingDefinition("squish_mesh")
@@ -338,8 +332,6 @@ class SquishSquare(Tool):
         self._all_picked_node.append(node)
         self._SMsg = 'Remove Last'
         self.propertyChanged.emit()
-        
-        Logger.log('d', 'propertyChanged emit')
         
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
         # Logger.log('d', 'End of _createSquishMesh')
@@ -392,19 +384,17 @@ class SquishSquare(Tool):
         # Can't use MeshBuilder.addCube() because that does not get per-vertex normals
         # Per-vertex normals require duplication of vertices
         s = size / 2
-        l = 0
+        inf = 0
         sup = height
     
-        
-
         nbv=24        
         verts = [ # 6 faces with 4 corners each
-            [-s, l,  s], [-s,  sup,  s], [ s,  sup,  s], [ s, l,  s],
-            [-s,  sup, -s], [-s, l, -s], [ s, l, -s], [ s,  sup, -s],
-            [ s, l, -s], [-s, l, -s], [-s, l,  s], [ s, l,  s],
-            [-s,  sup, -s], [ s,  sup, -s], [ s,  sup,  s], [-s,  sup,  s],
-            [-s, l,  s], [-s, l, -s], [-s,  sup, -s], [-s,  sup,  s],
-            [ s, l, -s], [ s, l,  s], [ s,  sup,  s], [ s,  sup, -s]
+            [-s, inf,  s], [-s, sup,  s], [ s, sup,  s], [ s, inf,  s],
+            [-s, sup, -s], [-s, inf, -s], [ s, inf, -s], [ s, sup, -s],
+            [ s, inf, -s], [-s, inf, -s], [-s, inf,  s], [ s, inf,  s],
+            [-s, sup, -s], [ s, sup, -s], [ s, sup,  s], [-s, sup,  s],
+            [-s, inf,  s], [-s, inf, -s], [-s, sup, -s], [-s, sup,  s],
+            [ s, inf, -s], [ s, inf,  s], [ s, sup,  s], [ s, sup, -s]
         ]
         mesh.setVertices(numpy.asarray(verts, dtype=numpy.float32))
 
@@ -432,7 +422,7 @@ class SquishSquare(Tool):
             for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
                 if node.callDecoration("isSliceable"):
                     N_Name=node.getName()
-                    Logger.log('d', 'isSliceable : ' + str(N_Name))
+                    # Logger.log('d', 'isSliceable : ' + str(N_Name))
                     node_stack=node.callDecoration("getStack")           
                     if node_stack:        
                         if node_stack.getProperty("squish_mesh", "value"):
@@ -445,7 +435,7 @@ class SquishSquare(Tool):
         
         for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
             if node.callDecoration("isSliceable"):
-                Logger.log('d', "isSliceable : {}".format(node.getName()))
+                # Logger.log('d', "isSliceable : {}".format(node.getName()))
                 node_stack=node.callDecoration("getStack")           
                 if node_stack: 
                     type_infill_mesh = node_stack.getProperty("infill_mesh", "value")
