@@ -80,9 +80,6 @@ class SquishSquare(Tool):
         self._AdhesionArea = False
         self._Nb_Layer = 1
         self._SMsg = 'Remove All'
-        self._Mesg1 = False
-        self._Mesg2 = False
-        self._Mesg3 = False
 
         # Shortcut
         if not VERSION_QT5:
@@ -154,9 +151,9 @@ class SquishSquare(Tool):
      
      
         self._settings_dict = OrderedDict()
-        self._settings_dict["identification_mesh"] = {
-            "label": "Identification mesh",
-            "description": "Mesh used as identification",
+        self._settings_dict["squish_mesh"] = {
+            "label": "Squish mesh",
+            "description": "Mesh used as squish test element",
             "type": "bool",
             "default_value": False,
             "settable_per_mesh": True,
@@ -300,46 +297,6 @@ class SquishSquare(Tool):
         new_instance.setProperty("value", True)
         new_instance.resetState()  # Ensure that the state is not seen as a user state.
         settings.addInstance(new_instance)
- 
-
-        key="support_type"
-        s_p = global_container_stack.getProperty(key, "value")
-        if s_p ==  'buildplate' and not self._Mesg1 :
-            definition_key=key + " label"
-            untranslated_label=extruder_stack.getProperty(key,"label")
-            translated_label=i18n_catalog.i18nc(definition_key, untranslated_label) 
-            Message(text = "Info modification current profile '" + translated_label  + "' parameter\nNew value : everywhere", title = i18n_cura_catalog.i18nc("@info:title", "Warning ! Tab Anti Warping")).show()
-            Logger.log('d', 'support_type different : ' + str(s_p))
-            # Define support_type=everywhere
-            global_container_stack.setProperty(key, "value", 'everywhere')
-            self._Mesg1 = True
-
-
-        # Fix some settings in Cura to get a better result
-        id_ex=0
-        global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()
-        extruder_stack = CuraApplication.getInstance().getExtruderManager().getActiveExtruderStacks()[0]
-        #extruder = global_container_stack.extruderList[int(id_ex)]    
-        
- 
-        if self._Nb_Layer >1 :
-            key="support_infill_rate"
-            s_p = int(extruder_stack.getProperty(key, "value"))
-            Logger.log('d', 'support_infill_rate actual : ' + str(s_p))
-            if s_p < 99 and not self._Mesg3 :
-                definition_key=key + " label"
-                untranslated_label=extruder_stack.getProperty(key,"label")
-                translated_label=i18n_catalog.i18nc(definition_key, untranslated_label)                
-                Message(text = "Info modification current profile '" + translated_label + "' parameter\nNew value : 100%" , title = i18n_cura_catalog.i18nc("@info:title", "Warning ! Tab Anti Warping")).show()
-                Logger.log('d', 'support_infill_rate different : ' + str(s_p))
-                # Define support_infill_rate=100%
-                if self._Extruder_count > 1 :
-                    global_container_stack.setProperty("support_infill_rate", "value", 100)
-                else:
-                    extruder_stack.setProperty("support_infill_rate", "value", 100)
-                
-                self._Mesg3 = True
-        
         
         op = GroupedOperation()
         # First add node to the scene at the correct position/scale, before parenting, so the support mesh does not get scaled with the parent
@@ -460,8 +417,9 @@ class SquishSquare(Tool):
                     type_support_mesh = node_stack.getProperty("support_mesh", "value")
                     type_anti_overhang_mesh = node_stack.getProperty("anti_overhang_mesh", "value") 
                     type_identification_mesh = node_stack.getProperty("identification_mesh", "value")
+                    type_squish_mesh = node_stack.getProperty("squish_mesh", "value")
                     
-                    if not type_infill_mesh and not type_support_mesh and not type_anti_overhang_mesh and not type_cutting_mesh and not type_identification_mesh :
+                    if not type_infill_mesh and not type_support_mesh and not type_anti_overhang_mesh and not type_cutting_mesh and not type_identification_mesh and not type_squish_mesh :
                         # and Selection.isSelected(node)
                         Logger.log('d', "Mesh : {}".format(node.getName()))
                         
@@ -512,11 +470,6 @@ class SquishSquare(Tool):
                                     self._createSquishMesh(node, new_position)
                                     act_position = new_position
                                  
-                            # Useless but I keep it for the code example
-                            # act_node = self._controller.getScene().findObject(id(node))
-                            # if act_node:
-                            #     Logger.log('d', "Mesh To Add : {}".format(act_node.getName()))
-                            #     self._createSquishMesh(act_node, Vector(point[0], 0, point[1]))
                             
                              
         return nb_Tab
@@ -576,7 +529,6 @@ class SquishSquare(Tool):
         if i_value < 1:
             return
         
-        self._Mesg3 = False
         #Logger.log('d', 'i_value : ' + str(i_value))        
         self._Nb_Layer = i_value
         self._preferences.setValue("SquishSquare/nb_layer", i_value)
