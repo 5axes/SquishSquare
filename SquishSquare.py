@@ -268,8 +268,8 @@ class SquishSquare(Tool):
         # Logger.log("d", "Center X= %s", str(node_bounds.center.x))
         # Logger.log("d", "Center Y= %s", str(node_bounds.center.z))
         # Logger.log("d", "Center Z= %s", str(node_bounds.center.y))
-        PosX = node_bounds.center.x - (node_bounds.width + self._UseSize)*0.5
-        PosY = node_bounds.center.z + (node_bounds.depth + self._UseSize)*0.5
+        PosX = node_bounds.center.x - node_bounds.width*0.5 - self._UseSize*0.75
+        PosY = node_bounds.center.z + node_bounds.depth*0.5 + self._UseSize*0.75
 
         # Logger.log("d", "Pos X= %s", str(PosX))
         # Logger.log("d", "Pos Y= %s", str(PosY))  
