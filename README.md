@@ -56,7 +56,7 @@ The first one is defined with the option Top/Bottom pattern to lines
 
 ## Remove All / Last
 
-Button to remove the lasts tab created ( **!but also every element defined as Squish type** )
+Button to remove the lasts tab created ( **!but also every element defined as Squish Mesh** )
 
 ![Remove All](./images/remove_all.png)
 
