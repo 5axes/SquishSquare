@@ -1,7 +1,7 @@
-# Suish Square
+# Squish Square
 Add two elements as square Tab to test the leveling of your bed effect in print corner. 
 
-![Suqre Tabs](./images/pastille_anti_wrapping.JPG)
+![Square Tabs](./images/SquishSquare.png)
 
 
 The automatic functions of adding and deleting tabs make it easy to create each elements.
@@ -11,13 +11,13 @@ The automatic functions of adding and deleting tabs make it easy to create each 
 ## Installation
 First, make sure your Cura version is  4.4 or newer.
 
-Manual Install Download & extract the repository as ZIP or clone it. Copy the files/plugins/TabAntiWarping directory to:
+Manual Install Download & extract the repository as ZIP or clone it. Copy the files/plugins/SquishSquare directory to:
 
-on Windows: [Cura installation folder]/plugins/TabPlus
+on Windows: [Cura installation folder]/plugins/SquishSquare
 
-on Linux: ~/.local/share/cura/[YOUR CURA VERSION]/plugins/TabAntiWarping (e.g. ~/.local/share/cura/4.6/plugins/TabAntiWarping)
+on Linux: ~/.local/share/cura/[YOUR CURA VERSION]/plugins/SquishSquare (e.g. ~/.local/share/cura/4.6/plugins/SquishSquare)
 
-on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/TabAntiWarping
+on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/SquishSquare
 
 
 ## How to use
@@ -26,27 +26,33 @@ on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/TabAntiWa
 - Click on the "Squish Square" button on the left toolbar  (Shortcut S)
 - Change de value for the tab *Size* in numeric input field in the tool panel if necessary
 
-
-- Click anywhere on the model to place "Squish Square" there
+- Click anywhere on the model to place "Squish Square" in the lower corner of this model.
 
 - **Clicking existing Tab deletes it**
 
-- **Clicking existing Tab + Ctrl** switch automaticaly to the Translate Tool to modify the position of the "Tab Anti Warping".
+- **Clicking existing Tab + Ctrl** switch automaticaly to the Translate Tool to modify the position of the "Squish Square".
 
 * The height of the tabs is automaticaly set to the Initial Layer Height .
-
-- Change de value for the tab *X/Y Distance* in numeric input field in the tool panel if necessary this value will adjust the distance between the tab treated as support and the model . By keeping enought distance, the tab will be easier to remove. 
 
 >Note: it's easier to add/remove tabs when you are in "Solid View" mode
 
 
 ## Automatic Addition
 
-Add automaticaly the tab on the point of the Convex hull representation of the part.
+![Automatic Addition](./images/addition.png)
 
-The option "Set On Adhesion Area" offer to adds the tabs on the Adhesion Area border.
 
-![Automatix Addition](./images/addition.png)
+Add automaticaly two tabs on the point in the lower corner of the model
+
+The first one is defined with the option Top/Bottom pattern to concentric
+
+![Top/Bottom pattern to concentric](./images/topbottomconcentric.png)
+
+The first one is defined with the option Top/Bottom pattern to lines
+
+![Top/Bottom pattern to lines](./images/topbottomlines.png)
+
+
 
 ## Remove All / Last
 
