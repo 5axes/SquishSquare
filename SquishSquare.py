@@ -252,15 +252,34 @@ class SquishSquare(Tool):
             # Add the support_mesh cube at the picked location
             self._createSquishMesh(picked_node, picked_position)
 
-    def _createSquishMesh(self, parent: CuraSceneNode, position: Vector):
+    def _createSquishMesh(self, parent: CuraSceneNode, position_spe: Vector):
         node = CuraSceneNode()
 
         node.setName("SquishSquare")
             
         node.setSelectable(True)
+ 
+        node_bounds = parent.getBoundingBox()
+        
+        Logger.log("d", "width= %s", str(node_bounds.width))
+        Logger.log("d", "height= %s", str(node_bounds.height))
+        Logger.log("d", "depth= %s", str(node_bounds.depth))
+        Logger.log("d", "Center X= %s", str(node_bounds.center.x))
+        Logger.log("d", "Center Y= %s", str(node_bounds.center.z))
+        Logger.log("d", "Center Z= %s", str(node_bounds.center.y))
+        
+
+        PosX = node_bounds.center.x - node_bounds.width*0.5 - self._UseSize
+        PosY = node_bounds.center.z - node_bounds.depth*0.5 - self._UseSize
+
+        # Logger.log("d", "Pos X= %s", str(PosX))
+        # Logger.log("d", "Pos Y= %s", str(PosY))
+        
+        position = Vector(PosX, 0, PosY)
+
         
         # long=Support Height
-        _long=position.y
+        _long=position_spe.y
         
         # This function can be triggered in the middle of a machine change, so do not proceed if the machine change
         # has not done yet.
@@ -390,7 +409,7 @@ class SquishSquare(Tool):
         if self._all_picked_node:
             for node in self._all_picked_node:
                 node_stack = node.callDecoration("getStack")
-                if node_stack.getProperty("support_mesh", "value"):
+                if node_stack.getProperty("squish_mesh", "value"):
                     self._removeSquishMesh(node)
             self._all_picked_node = []
             self._SMsg = 'Remove All'
@@ -402,7 +421,7 @@ class SquishSquare(Tool):
                     Logger.log('d', 'isSliceable : ' + str(N_Name))
                     node_stack=node.callDecoration("getStack")           
                     if node_stack:        
-                        if node_stack.getProperty("support_mesh", "value"):
+                        if node_stack.getProperty("squish_mesh", "value"):
                             # N_Name=node.getName()
                             # Logger.log('d', 'support_mesh : ' + str(N_Name)) 
                             self._removeSquishMesh(node)
