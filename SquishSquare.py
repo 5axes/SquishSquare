@@ -90,8 +90,7 @@ class SquishSquare(Tool):
         self._controller = self.getController()
 
         self._selection_pass = None
-
-        # self._i18n_catalog = None
+        self._i18n_catalog = None
         
         self._application = CuraApplication.getInstance()
 
@@ -138,16 +137,16 @@ class SquishSquare(Tool):
         
         # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
-        self._preferences.addPreference("SquishSquare/s_size", 10)
+        self._preferences.addPreference("squishsquare/s_size", 10)
         # convert as float to avoid further issue
-        self._UseSize = float(self._preferences.getValue("SquishSquare/s_size"))
+        self._UseSize = float(self._preferences.getValue("squishsquare/s_size"))
 
-        self._preferences.addPreference("SquishSquare/adhesion_area", False)
-        self._AdhesionArea = bool(self._preferences.getValue("SquishSquare/adhesion_area"))   
+        self._preferences.addPreference("squishsquare/adhesion_area", False)
+        self._AdhesionArea = bool(self._preferences.getValue("squishsquare/adhesion_area"))   
 
-        self._preferences.addPreference("SquishSquare/nb_layer", 1)
-        # convert as float to avoid further issue
-        self._Nb_Layer = int(self._preferences.getValue("SquishSquare/nb_layer"))       
+        self._preferences.addPreference("squishsquare/nb_layer", 1)
+        # convert as int to avoid further issue
+        self._Nb_Layer = int(self._preferences.getValue("squishsquare/nb_layer"))       
      
      
         self._settings_dict = OrderedDict()
@@ -163,7 +162,9 @@ class SquishSquare(Tool):
         }
         ContainerRegistry.getInstance().containerLoadComplete.connect(self._onContainerLoadComplete)
 
+
     def _onContainerLoadComplete(self, container_id):
+        
         if not ContainerRegistry.getInstance().isLoaded(container_id):
             # skip containers that could not be loaded, or subsequent findContainers() will cause an infinite loop
             return
@@ -183,9 +184,9 @@ class SquishSquare(Tool):
             return
 
         blackmagic_category = container.findDefinitions(key="blackmagic")
-        identification_mesh = container.findDefinitions(key=list(self._settings_dict.keys())[0])
-        
-        if blackmagic_category and not identification_mesh:            
+        squish_mesh = container.findDefinitions(key=list(self._settings_dict.keys())[0])
+                
+        if blackmagic_category and not squish_mesh:            
             blackmagic_category = blackmagic_category[0]
             for setting_key, setting_dict in self._settings_dict.items():
 
@@ -196,6 +197,7 @@ class SquishSquare(Tool):
                 blackmagic_category._children.append(definition)
                 container._definition_cache[setting_key] = definition
                 container._updateRelations(definition)
+
                 
     def event(self, event):
         super().event(event)
@@ -230,7 +232,7 @@ class SquishSquare(Tool):
             if node_stack:
             
                 if node_stack.getProperty("squish_mesh", "value"):
-                    self._removeSupportMesh(picked_node)
+                    self._removeSquishMesh(picked_node)
                     return
 
                 elif node_stack.getProperty("anti_overhang_mesh", "value") or node_stack.getProperty("infill_mesh", "value") or node_stack.getProperty("support_mesh", "value") or node_stack.getProperty("squish_mesh", "value"):
@@ -259,27 +261,22 @@ class SquishSquare(Tool):
         
         # long=Support Height
         _long=position.y
-
-        # get layer_height_0 used to define pastille height
-        _id_ex=0
         
         # This function can be triggered in the middle of a machine change, so do not proceed if the machine change
         # has not done yet.
         global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()
-        #extruder = global_container_stack.extruderList[int(_id_ex)] 
         extruder_stack = CuraApplication.getInstance().getExtruderManager().getActiveExtruderStacks()[0]     
         self._Extruder_count=global_container_stack.getProperty("machine_extruder_count", "value") 
         Logger.log('d', "Info Extruder_count --> " + str(self._Extruder_count))   
         
         _layer_h_i = extruder_stack.getProperty("layer_height_0", "value")
         _layer_height = extruder_stack.getProperty("layer_height", "value")
-        _line_w = extruder_stack.getProperty("line_width", "value")
-        Logger.log('d', 'layer_height_0 : ' + str(_layer_h_i))
+        # Logger.log('d', 'layer_height_0 : ' + str(_layer_h_i))
         _layer_h = (_layer_h_i * 1.2) + (_layer_height * (self._Nb_Layer -1) )
-        _line_w = _line_w * 1.2 
         
 
         # Square creation Size , layer_height_0*1.2
+        position.z = 0
         mesh = self._createSquare(self._UseSize,_layer_h)
         
         node.setMeshData(mesh.build())
@@ -291,6 +288,8 @@ class SquishSquare(Tool):
         stack = node.callDecoration("getStack") # created by SettingOverrideDecorator that is automatically added to CuraSceneNode
         settings = stack.getTop()
 
+        Logger.log('d', 'getSettingDefinition squish_mesh')
+        
         # support_mesh type
         definition = stack.getSettingDefinition("squish_mesh")
         new_instance = SettingInstance(definition, settings)
@@ -308,9 +307,12 @@ class SquishSquare(Tool):
         self._SMsg = 'Remove Last'
         self.propertyChanged.emit()
         
+        Logger.log('d', 'propertyChanged emit')
+        
         CuraApplication.getInstance().getController().getScene().sceneChanged.emit(node)
+        Logger.log('d', 'End of _createSquishMesh')
 
-    def _removeSupportMesh(self, node: CuraSceneNode):
+    def _removeSquishMesh(self, node: CuraSceneNode):
         parent = node.getParent()
         if parent == self._controller.getScene().getRoot():
             parent = None
@@ -379,6 +381,8 @@ class SquishSquare(Tool):
         mesh.setIndices(numpy.asarray(indices, dtype=numpy.int32))
 
         mesh.calculateNormals()
+        
+        # Logger.log('d', '_createSquare')
         return mesh
         
     def removeAllSquishMesh(self):
@@ -386,21 +390,21 @@ class SquishSquare(Tool):
             for node in self._all_picked_node:
                 node_stack = node.callDecoration("getStack")
                 if node_stack.getProperty("support_mesh", "value"):
-                    self._removeSupportMesh(node)
+                    self._removeSquishMesh(node)
             self._all_picked_node = []
             self._SMsg = 'Remove All'
             self.propertyChanged.emit()
         else:        
             for node in DepthFirstIterator(self._application.getController().getScene().getRoot()):
                 if node.callDecoration("isSliceable"):
-                    # N_Name=node.getName()
-                    # Logger.log('d', 'isSliceable : ' + str(N_Name))
+                    N_Name=node.getName()
+                    Logger.log('d', 'isSliceable : ' + str(N_Name))
                     node_stack=node.callDecoration("getStack")           
                     if node_stack:        
                         if node_stack.getProperty("support_mesh", "value"):
                             # N_Name=node.getName()
                             # Logger.log('d', 'support_mesh : ' + str(N_Name)) 
-                            self._removeSupportMesh(node)
+                            self._removeSquishMesh(node)
             
     def addAutoSquishMesh(self) -> int:
         nb_Tab=0
@@ -507,7 +511,7 @@ class SquishSquare(Tool):
         
         #Logger.log('d', 's_value : ' + str(s_value))        
         self._UseSize = s_value
-        self._preferences.setValue("SquishSquare/s_size", s_value)
+        self._preferences.setValue("squishsquare/s_size", s_value)
  
     def getNLayer(self) -> int:
         """ 
@@ -531,7 +535,7 @@ class SquishSquare(Tool):
         
         #Logger.log('d', 'i_value : ' + str(i_value))        
         self._Nb_Layer = i_value
-        self._preferences.setValue("SquishSquare/nb_layer", i_value)
+        self._preferences.setValue("squishsquare/nb_layer", i_value)
                 
     def getSArea(self) -> bool:
         """ 
@@ -544,6 +548,6 @@ class SquishSquare(Tool):
         param SArea: as boolean.
         """
         self._AdhesionArea = SArea
-        self._preferences.setValue("SquishSquare/adhesion_area", SArea)
+        self._preferences.setValue("squishsquare/adhesion_area", SArea)
  
 
