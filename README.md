@@ -44,14 +44,13 @@ on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/SquishSqu
 
 Add automaticaly two tabs on the point in the lower corner of the model
 
-The first one is defined with the option Top/Bottom pattern to concentric
+The first one is defined with the option Top/Bottom pattern to **concentric**.
 
 ![Top/Bottom pattern to concentric](./images/topbottomconcentric.png)
 
-The first one is defined with the option Top/Bottom pattern to lines
+The second one is defined with the option Top/Bottom pattern to **lines**.
 
 ![Top/Bottom pattern to lines](./images/topbottomlines.png)
-
 
 
 ## Remove All / Last
