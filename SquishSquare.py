@@ -149,7 +149,7 @@ class SquishSquare(Tool):
         self._settings_dict = OrderedDict()
         self._settings_dict["squish_mesh"] = {
             "label": "Squish mesh",
-            "description": "Mesh used as squish test element",
+            "description": "Mesh used as squish test element (Added for the plugin SquishSquare)",
             "type": "bool",
             "default_value": False,
             "settable_per_mesh": True,
