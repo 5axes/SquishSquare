@@ -33,7 +33,7 @@ on Mac: ~/Library/Application Support/cura/[YOUR CURA VERSION]/plugins/SquishSqu
 
 - **Clicking existing Tab + Ctrl** switch automaticaly to the Translate Tool to modify the position of the "Squish Square".
 
-* The height of the tabs is automaticaly set to the Initial Layer Height .
+The height of the tabs is automaticaly set according to the number of layer set in the menu . This height use the *Layer Height*  and the *Initial Layer Height* defined at the tab creation time.
 
 >Note: it's easier to add/remove tabs when you are in "Solid View" mode
 
