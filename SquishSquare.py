@@ -9,7 +9,8 @@
 # All modification 5@xes
 # First release  20-06-2022  First proof of concept
 #------------------------------------------------------------------------------------------------------------------
-#
+# V1.0.0    : First Proof of Concept
+# V1.0.1    : Two tabs in One click
 #------------------------------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -129,6 +130,7 @@ class SquishSquare(Tool):
         Selection.selectionChanged.connect(self._onSelectionChanged)
         self._had_selection = False
         self._skip_press = False
+        self._nb_tab = 2
 
         self._had_selection_timer = QTimer()
         self._had_selection_timer.setInterval(0)
@@ -138,6 +140,9 @@ class SquishSquare(Tool):
         # set the preferences to store the default value
         self._preferences = CuraApplication.getInstance().getPreferences()
         self._preferences.addPreference("squishsquare/s_size", 10)
+        self._preferences.addPreference("squishsquare/nb_tab", 2)
+        self._nb_tab = int(self._preferences.getValue("squishsquare/nb_tab")) 
+        
         # convert as float to avoid further issue
         self._UseSize = float(self._preferences.getValue("squishsquare/s_size"))  
 
@@ -247,11 +252,14 @@ class SquishSquare(Tool):
             # Logger.log('d', "Y : {}".format(picked_position.y))
                             
             # Add the support_mesh cube at the picked location
-            self._nbtab += 1
+            
             #self._createSquishMesh(picked_node, picked_position,self._nbtab)
-            self._createSquishMesh(picked_node, self._nbtab)
-            if self._nbtab >= 2 :
-                self._nbtab = 0
+            for i in range(self._nb_tab):
+                self._nbtab += 1
+                self._createSquishMesh(picked_node, self._nbtab)
+                if self._nbtab >= 2 :
+                    self._nbtab = 0
+          
 
     def _createSquishMesh(self, parent: CuraSceneNode, Nb: int):
         node = CuraSceneNode()
