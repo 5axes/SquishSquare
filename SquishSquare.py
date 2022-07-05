@@ -148,7 +148,10 @@ class SquishSquare(Tool):
 
         self._preferences.addPreference("squishsquare/nb_layer", 1)
         # convert as int to avoid further issue
-        self._Nb_Layer = int(self._preferences.getValue("squishsquare/nb_layer"))       
+        self._Nb_Layer = int(self._preferences.getValue("squishsquare/nb_layer"))  
+
+
+        Logger.log('d', "NBTab : {}".format(self._nb_tab))        
      
      
         self._settings_dict = OrderedDict()
