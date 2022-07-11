@@ -27,7 +27,7 @@ This menu opens the following folder:
 ## How to use
 
 - Load a model in Cura and select it
-- Click on the "Squish Square" button on the left toolbar  (Shortcut S)
+- Click on the "Squish Square" button on the left toolbar  (Shortcut D)
 - Change de value for the tab *Size* in numeric input field in the tool panel if necessary
 
 - Click anywhere on the model to place "Squish Square" in the lower corner of this model.
