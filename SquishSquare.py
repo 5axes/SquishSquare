@@ -11,7 +11,7 @@
 #------------------------------------------------------------------------------------------------------------------
 # V1.0.0    : First Proof of Concept
 # V1.0.1    : Two tabs in One click
-# V1.0.2    : Change Shortcut (D)
+# V1.0.2    : Change Shortcut (D) and change style of button for Cura 5.0 - 5.1
 #------------------------------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -524,6 +524,4 @@ class SquishSquare(Tool):
         #Logger.log('d', 'i_value : ' + str(i_value))        
         self._Nb_Layer = i_value
         self._preferences.setValue("squishsquare/nb_layer", i_value)
-                
- 
-
+            
