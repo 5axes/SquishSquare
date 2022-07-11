@@ -99,7 +99,7 @@ class SquishSquare(Tool):
         # Suggested solution from fieldOfView . in this discussion solved in Cura 4.9
         # https://github.com/5axes/Calibration-Shapes/issues/1
         # Cura are able to find the scripts from inside the plugin folder if the scripts are into a folder named resources
-        Resources.addSearchPath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources"))        
+        # Resources.addSearchPath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources"))        
 
         self.Major=1
         self.Minor=0
