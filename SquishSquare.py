@@ -11,6 +11,7 @@
 #------------------------------------------------------------------------------------------------------------------
 # V1.0.0    : First Proof of Concept
 # V1.0.1    : Two tabs in One click
+# V1.0.2    : Change Shortcut (D)
 #------------------------------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False
@@ -84,9 +85,9 @@ class SquishSquare(Tool):
 
         # Shortcut
         if not VERSION_QT5:
-            self._shortcut_key = Qt.Key.Key_S
+            self._shortcut_key = Qt.Key.Key_D
         else:
-            self._shortcut_key = Qt.Key_S
+            self._shortcut_key = Qt.Key_D
             
         self._controller = self.getController()
 
