@@ -12,6 +12,7 @@
 # V1.0.0    : First Proof of Concept
 # V1.0.1    : Two tabs in One click
 # V1.0.2    : Change Shortcut (D) and change style of button for Cura 5.0 - 5.1
+# V1.0.3    : Change location qml
 #------------------------------------------------------------------------------------------------------------------
 
 VERSION_QT5 = False

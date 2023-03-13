@@ -14,9 +14,9 @@ i18n_catalog = i18nCatalog("cura")
 
 def getMetaData():
     if not VERSION_QT5:
-        QmlFile="qml_qt6/SquishSquare.qml"
+        QmlFile="qml/qml_qt6/SquishSquare.qml"
     else:
-        QmlFile="qml_qt5/SquishSquare.qml"
+        QmlFile="qml/qml_qt5/SquishSquare.qml"
         
     return {
         "tool": {
